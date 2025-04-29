@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shabdon ki Mehfil By Tahir Umar</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -170,7 +171,7 @@
         Waqt se pehle sambhal gaya hai,<br>
         Tahir Umar ek naya sitaara ban gaya hai.
         <div class="buttons">
-          <button class="like-btn" onclick="likePoem(this)">Like (0)</button>
+          <button class="like-btn" data-id="poem1">Like (<span class="count">0</span>)</button>
           <button class="share-btn" onclick="sharePoem('Tahir Umar – Dil se likha ek naam')">Share</button>
         </div>
       </div>
@@ -178,17 +179,17 @@
 
     <div class="section">
       <h2>My Poetry</h2>
-      <div class="poem">
+      <div class="poem" id="poem2">
         "Zindagi ek kitaab si lagti hai, har pal ek nayi kahani hai..."
         <div class="buttons">
-          <button class="like-btn" onclick="likePoem(this)">Like (0)</button>
+          <button class="like-btn" data-id="poem2">Like (<span class="count">0</span>)</button>
           <button class="share-btn" onclick="sharePoem('Zindagi ek kitaab si lagti hai...')">Share</button>
         </div>
       </div>
-      <div class="poem">
+      <div class="poem" id="poem3">
         "Khamoshi mein bhi ek aawaaz hoti hai, jo sirf dil sun sakta hai..."
         <div class="buttons">
-          <button class="like-btn" onclick="likePoem(this)">Like (0)</button>
+          <button class="like-btn" data-id="poem3">Like (<span class="count">0</span>)</button>
           <button class="share-btn" onclick="sharePoem('Khamoshi mein bhi ek aawaaz hoti hai...')">Share</button>
         </div>
       </div>
@@ -201,7 +202,7 @@
 
     <div class="section">
       <h2>Submit Your Poetry</h2>
-      <form action="#" method="POST">
+      <form id="poetryForm">
         <label for="name">Your Name:</label>
         <input type="text" id="name" name="name" required>
 
@@ -218,11 +219,31 @@
   </footer>
 
   <script>
-    function likePoem(button) {
-      let current = parseInt(button.innerText.match(/\d+/)[0]);
-      button.innerText = `Like (${current + 1})`;
-    }
+    // LIKE BUTTON LIMITATION
+    const likedPoems = JSON.parse(localStorage.getItem('likedPoems') || '{}');
 
+    document.querySelectorAll('.like-btn').forEach(button => {
+      const poemId = button.dataset.id;
+      const countSpan = button.querySelector('.count');
+
+      if (likedPoems[poemId]) {
+        button.disabled = true;
+        countSpan.innerText = likedPoems[poemId];
+      }
+
+      button.addEventListener('click', () => {
+        if (!likedPoems[poemId]) {
+          let current = parseInt(countSpan.innerText);
+          current += 1;
+          countSpan.innerText = current;
+          likedPoems[poemId] = current;
+          localStorage.setItem('likedPoems', JSON.stringify(likedPoems));
+          button.disabled = true;
+        }
+      });
+    });
+
+    // SHARE BUTTON
     function sharePoem(text) {
       const shareData = {
         title: 'Shabdon ki Mehfil by Tahir Umar',
@@ -235,6 +256,22 @@
         alert("Share not supported in this browser.");
       }
     }
+
+    // EMAILJS SETUP
+    emailjs.init('hKtz4S4KUQv8CVvk4');
+
+    document.getElementById('poetryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      emailjs.sendForm('service_snve73d', 'template_vkvujvp', this)
+        .then(function() {
+          alert('Poem submitted successfully!');
+          document.getElementById('poetryForm').reset();
+        }, function(error) {
+          alert('Failed to send poem. Please try again.');
+          console.error(error);
+        });
+    });
   </script>
 </body>
-            </html>
+</html>
