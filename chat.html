@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextBuddy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to TextBuddy!</h1>
+        <p>Please read and agree to our <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a> before using this website.</p>
+        <button id="agree">I Agree</button>
+        <button id="disagree">I Disagree</button>
+
+        <div id="chat-interface" style="display:none;">
+            <label for="user-id">Start Your ID:</label>
+            <input type="text" id="user-id" placeholder="Enter your ID">
+            <div class="communication-options">
+                <button onclick="copyText()">Copy</button>
+                <button onclick="shareText()">Share</button>
+                <button onclick="connect()">Connect</button>
+                <button onclick="voiceCall()">Voice Call</button>
+                <button onclick="videoCall()">Video Call</button>
+                <button onclick="stopCall()">Stop Call</button>
+                <button onclick="sendText()">Send</button>
+                <button onclick="sendEmail()">Email</button> <!-- New Email Button -->
+            </div>
+        </div>
+    </div>
+    <script src="chat.js"></script>
+</body>
+</html>
